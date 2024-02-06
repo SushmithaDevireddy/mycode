@@ -1,0 +1,17 @@
+---
+- name: Using Ansible to send an HTTP GET
+  hosts: https://ent8tw9yqbxke.x.pipedream.net 
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Send HTTP GET to requestbin.com
+      ansible.builtin.uri:
+        url: "{{ https://ent8tw9yqbxke.x.pipedream.net }}"
+        method: GET
+      register: results
+      
+    - name: Display results
+      debug:
+        var: results
+
