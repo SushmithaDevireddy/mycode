@@ -1,0 +1,10 @@
+[redfish_apis]
+; rf01  baseuri="redfish01.example.com"   username="root"    password="qwerty"
+; rf02  baseuri="redfish02.example.com"   username="root"    password="qwerty"
+; rf03  baseuri="redfish03.example.com"   username="root"    password="qwerty"
+
+; customize the following line so that the "baseuri" reflects the fqdn for aux1
+; to find the fqdn of aux1, click on the channel changer in the upper right co" username="root" password=null
+; and then clihttps://aux1-0b2b8bd6-ec1a-4c9b-9113-f391cfb63e0e.live.alta3.com
+
+rf04 baseuri="aux1-0b2b8bd6-ec1a-4c9b-9113-f391cfb63e0e.live.alta3.com" username="root" password=null
