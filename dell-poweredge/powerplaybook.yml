@@ -1,0 +1,52 @@
+---
+ - name: PowerEdge Challenge
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  collections:
+    - dellemc.openmanage
+
+  vars:
+    idrac_ip: 10.0.0.89            # the idrac to connect to
+    idrac_user: root                   # the login user that will perform the operation
+    idrac_password: r0gerwilc0         # the 0 characters are zeros
+
+
+  tasks:
+    - name: Checking host operating system is RHEL or HP-UX
+
+      # Perform the main tasks in a block 
+    - name: Main tasks block
+      block:
+      - name: Linux Host Information
+        shell: "echo \"{'HOST_NAME':'{{ ansible_hostname }}', 'OS_VERSION':'RHEL{{ ansible_distribution_version }}', 'KERNEL_VERS':'{{ ansible_kernel}}', 'UPTIME':'{{ facter_system_uptime.uptime }}' }\""
+        register: result
+        when: ansible_os_family == "RedHat"
+
+      - debug:
+          msg: "{{ result }}"
+
+      - name: HP-UX Uptime
+        shell: uptime | awk -F, '{sub(".*up ",x,$1);print $1}' 
+        no_log: True
+        register: uptime
+        when: ansible_os_family == "HP-UX"
+
+      - name: HP-UX Patch Version
+        shell: "swlist|grep QPKBASE|awk '{print $2}' "
+        no_log: True
+        become: true
+        become_user: root
+        register: patch_vers
+        when: ansible_os_family == "HP-UX"
+
+      - name: HP-UX Hosts Information
+        shell: "echo \"{'HOST_NAME':'{{ ansible_hostname }}', 'OS_VERSION':'HPUX_{{ ansible_distribution_version }}', 'KERNEL_VERS':'QPKBASE-{{ patch_vers.stdout }}', 'UPTIME':'{{ uptime.stdout }}' }\""
+        register: p
+        when: ansible_os_family == "HP-UX"
+
+      - debug:
+          msg: "{{ p }}"
+
+       
